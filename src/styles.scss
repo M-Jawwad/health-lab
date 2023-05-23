@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 /* Importing Bootstrap SCSS file. */
-@import "assets/styles/bootstrap-extend";
+// @import "assets/styles/bootstrap-extend";
 @import "assets/styles/helpers";
 @import "assets/styles/fonts";
 @import "assets/styles/global";
@@ -14,6 +14,11 @@ body {
     font-size: 14px !important;
     background: #f8f8f8;
     color: #444;
+}
+
+.bg-theme {
+    background-image: url(assets/images/vodafone-background.jpg);
+    background-size: cover;
 }
 
 // .btn-danger {
