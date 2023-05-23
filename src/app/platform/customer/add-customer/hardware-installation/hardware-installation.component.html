@@ -1,0 +1,109 @@
+<div class="w-100-p h-100-p p-0" fxLayout="row wrap" style="position: relative;">
+
+    <img *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" width="150px" height="150px"
+        style="position: absolute; top: 30%; left: 42%;">
+
+    <form [formGroup]="hiForm" (ngSubmit)="onSubmit()" fxFlex="100" fxLayout="row wrap">
+        <h4 class="w-100-p fs-12 fw-600 text-uppercase bg-blue-100" style="padding: 4px;">Hardware Shipment &
+            Installation</h4>
+        <div class="w-100-p" fxLayout="row wrap">
+            <div fxFlex="100" fxLayout="row" fxLayoutGap="12px">
+                <div fxFlex="24.5" class="form-group">
+                    <label>Installation Required<span class="text-danger">*</span></label>
+                    <ng-select placeholder="Select installation requirement" [readonly]="readonly" [clearable]="false"
+                        formControlName="is_required">
+                        <ng-option [value]="true">Yes</ng-option>
+                        <ng-option [value]="false">No</ng-option>
+                    </ng-select>
+                </div>
+
+                <div fxFlex="24.5" class="form-group">
+                    <label>Installation Status<span class="text-danger">*</span></label>
+                    <ng-select placeholder="Select installation status" [readonly]="readonly" [clearable]="false"
+                        formControlName="status">
+                        <ng-option [value]="'not_initiated'">Not Initiated</ng-option>
+                        <ng-option [value]="'in_progress'">In Progress</ng-option>
+                        <ng-option [value]="'completed'">Completed</ng-option>
+                    </ng-select>
+
+                    <span class="text-danger"
+                        *ngIf="hiForm.controls.status.hasError('required') && hiForm.controls.status.touched">
+                        Please provide installation status.
+                    </span>
+
+                </div>
+
+                <div fxFlex="24.5" class="form-group">
+                    <label for="">Start Date<span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #sd="ngbDatepicker"
+                            (click)="sd.toggle()" formControlName="start_date" [readonly]="readonly">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary btn-icon"
+                                (click)="$event.stopPropagation(); sd.toggle()" [disabled]="readonly" type="button"
+                                style="padding: 0 8px; border-radius: 0px; border-color: #ced4da;">
+                                <i class="ri-calendar-2-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="text-danger"
+                        *ngIf="hiForm.controls.start_date.hasError('required') && hiForm.controls.start_date.touched">
+                        Please provide start date.
+                    </span>
+                </div>
+
+                <div fxFlex="24.5" class="form-group mr-0">
+                    <label for="">End Date<span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #ed="ngbDatepicker"
+                            (click)="ed.toggle()" formControlName="end_date" [readonly]="readonly">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary btn-icon"
+                                (click)="$event.stopPropagation(); ed.toggle()" type="button"
+                                style="padding: 0 8px; border-radius: 0px; border-color: #ced4da;"
+                                [disabled]="readonly">
+                                <i class="ri-calendar-2-line"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <span class="text-danger"
+                        *ngIf="hiForm.controls.end_date.hasError('required') && hiForm.controls.end_date.touched">
+                        Please provide end date.
+                    </span>
+                </div>
+            </div>
+
+            <div fxFlex="100" class="form-group">
+                <label>Address<span class="text-danger">*</span></label>
+                <!-- <span class="text-danger" *ngIf="hiForm.controls.is_required.value">*</span> -->
+                <textarea class="form-control" cols="30" rows="3" formControlName="address"
+                    [required]="hiForm.controls.is_required.value" [readonly]="readonly"
+                    placeholder="Enter hardware installation address"></textarea>
+                <ng-container *ngIf="hiForm.controls.address.dirty">
+                    <span class="text-danger" *ngIf="hiForm.controls.address.hasError('required')">
+                        Please provide address.
+                    </span>
+                    <span class="text-danger" *ngIf="hiForm.controls.address.hasError('maxlength')">
+                        Address must be less than of 600 characters
+                    </span>
+                    <span class="text-danger" *ngIf="hiForm.controls.address.hasError('whitespace')">
+                        Avoid white spaces
+                    </span>
+                </ng-container>
+            </div>
+        </div>
+
+        <div *ngIf="!readonly" class="w-100-p modal-footer">
+            <div fxFlex="100" class="form-group text-center mb-0">
+                <button type="submit" class="btn btn-success btn-round mr-8" [disabled]="loading || !hiForm.valid">
+                    <i class="ri-check-fill"></i>
+                    <span>{{data?.id ? 'Update': 'Save'}}</span>
+                </button>
+                <button type="button" class="btn btn-default btn-round" (click)="hiForm.reset()">
+                    <i class="ri-close-line"></i>
+                    <span>Clear</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,40 @@
+<div class="w-100-p" fxLayout="row wrap">
+    <ng-container *ngFor="let menu of menus; let idx=index;">
+        <ng-container *ngIf="!menu.is_parent">
+            <div class="w-100-p site-menu-item">
+                <a class="h-38 w-100-p" fxFlex="100" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center"
+                    style="list-style: none;" [routerLink]="[ menu.route ]" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}">
+                    <i class="site-menu-icon fs-18 fw-400" ngClass="{{menu?.icon}}"></i>
+                    <span>{{menu.name}}</span>
+                </a>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="menu.is_parent">
+            <div class="w-100-p site-menu-item" fxLayoutAlign="space-between center" (click)="onSelectedItem(menus, idx)">
+                <a class="h-38 w-100-p" fxFlex="100" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="space-between center"
+                    style="list-style: none;">
+                    <div fxLayoutGap="8px" fxLayoutAlign="start center" class="lh-18">
+                        <i class="site-menu-icon fs-18 fw-400" ngClass="{{menu?.icon}}"></i>
+                        <span>{{menu.name}}</span>
+                    </div>
+
+                    <i class="ri-add-line fw-400" *ngIf="!menu.expanded"></i>
+                    <i class="ri-subtract-line fw-400" *ngIf="menu.expanded"></i>
+                </a>
+            </div>
+
+            <ng-container *ngFor="let menu of menu.sub_menu">
+                <div class="w-100-p site-menu-item" *ngIf="menus[idx]['expanded']">
+                    <a class="h-38 w-100-p" fxFlex="100" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center"
+                        style="list-style: none;" [routerLink]="[ menu.route ]" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{exact: true}">
+                        <i class="site-menu-icon fs-18 fw-400"></i>
+                        <span>{{menu.name}}</span>
+                    </a>
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</div>

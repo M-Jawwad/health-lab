@@ -1,0 +1,781 @@
+<!-- <div class="bg-blue-100 page-header">
+    <h1 class="fs-20 fw-400">Settings</h1>
+</div> -->
+
+<div class="card w-100-p bg-white p-16" style="border: none;">
+    <img *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" class="loader" width="150px"
+        height="150px">
+    <ng-container *ngIf="usecases.length > 0">
+        <div ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills nav-tabs" style="position: relative;">
+            <!-- <button class="btn btn-primary btn-usecase" (click)="onAddUsecase()">Add Usecase</button> -->
+            <ng-container *ngFor="let item of usecases; let idx=index">
+                <div [ngbNavItem]="item.id">
+                    <a ngbNavLink class="fw-700" (click)="getData(item.id, true)">{{item.usecase_name}}</a>
+                    <ng-template ngbNavContent>
+                        <ng-container
+                            *ngIf="item?.usecase_name !== 'Fleet Management System' || item?.usecase_name != 'Asset Tracking'">
+                            <ngb-accordion [closeOthers]="true" style="border: none;" activeIds="acc-0">
+                                <ng-container *ngFor="let module of data.modules; let mIdx=index">
+                                    <ngb-panel id="acc-{{mIdx}}" class="custom-panel-body">
+
+                                        <ng-template ngbPanelHeader let-opened="opened">
+                                            <button ngbPanelToggle class="w-100-p btn" style="color: #f60000;">
+                                                <div class="w-100-p" fxLayout="row"
+                                                    fxLayoutAlign="space-between center">
+                                                    <div class="fw-300 fs-15">
+                                                        <i [ngClass]="module?.icon" class="mr-8"></i>
+                                                        <span> {{module.module_name}} </span>
+                                                    </div>
+                                                    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                                        <button *ngIf="!readonly" class="btn btn-primary h-28 lh-16"
+                                                            fxLayout="row" (click)="onAddFeature(module.id, data.id)">
+                                                            <i class="ri-add-line"></i>
+                                                            <span>Add Feature</span>
+                                                        </button>
+                                                        <span><i
+                                                                [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </ng-template>
+
+                                        <ng-template ngbPanelContent>
+                                            <div fxLayout="row wrap" class="custom-panel-body" style="overflow: auto;">
+                                                <table *ngIf="module?.features?.length > 0"
+                                                    class="table table-hover table-striped no-border text-wrap mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td style="min-width: 328px;"></td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start">
+                                                                <td *ngFor="let package of getSortedArray(module.packages)"
+                                                                    style="line-height: 16px;">
+                                                                    <div class="title">{{package.name}}</div>
+                                                                </td>
+                                                            </div>
+                                                            <td *ngIf="!readonly" width="78"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let feature of module.features; let i=index">
+                                                            <td>{{i+1}}</td>
+                                                            <td style="min-width: 328px;"><span
+                                                                    class="break-line">{{feature.feature_name}}</span>
+                                                            </td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start"
+                                                                class="text-center">
+                                                                <td
+                                                                    *ngFor="let pack of getSortedNames(feature.packages); let k=index">
+                                                                    <div class="custom checkbox-inline checkbox-danger"
+                                                                        style="min-width: 128px;">
+                                                                        <input style="color: red;" [disabled]="readonly"
+                                                                            type="checkbox" id="{{i}}-{{k}}"
+                                                                            [checked]="pack.is_active"
+                                                                            (change)="onSelectPackage(pack)"
+                                                                            [(ngModel)]="pack.is_active">
+                                                                        <label for="{{i}}-{{k}}"></label>
+                                                                    </div>
+                                                                </td>
+                                                            </div>
+                                                            <td *ngIf="!readonly" style="min-width: 78px;">
+                                                                <button
+                                                                    class="btn btn-icon btn-primary w-24 h-24 p-0 mr-1"
+                                                                    (click)="onAddFeature(module.id, data.id, feature)">
+                                                                    <i class="ri-pencil-line"></i>
+                                                                </button>
+                                                                <button class="btn btn-icon btn-danger w-24 h-24 p-0"
+                                                                    (click)="onDeleteFeature(module.id, data.id, feature)">
+                                                                    <i class="ri-delete-bin-6-line"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <div *ngIf="module?.features?.length === 0">
+                                                    <h5>No features found.</h5>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </ngb-panel>
+                                </ng-container>
+                            </ngb-accordion>
+                        </ng-container>
+
+                        <!-- <ng-container
+                            *ngIf="item.usecase_name === 'Fleet Management System' || item.usecase_name === 'Asset Tracking'">
+                            <ngb-accordion [closeOthers]="true" style="border: none;" activeIds="acc-0">
+                                <ng-container *ngIf="item.usecase_name === 'Fleet Management System'">
+                                    <ng-container *ngFor="let module of fmsData?.modules">
+                                        <ngb-panel id="acc-0" class="custom-panel-body">
+                                            <ng-template ngbPanelHeader let-opened="opened">
+                                                <button ngbPanelToggle class="w-100-p btn" style="color: #f60000;">
+                                                    <div class="w-100-p" fxLayout="row"
+                                                        fxLayoutAlign="space-between center">
+                                                        <div class="fw-300 fs-15">
+                                                            <i [ngClass]="module?.icon" class="mr-8"></i>
+                                                            <span> {{module.module_name}} </span>
+                                                        </div>
+                                                        <div fxLayout="row" fxLayoutGap="8px"
+                                                            fxLayoutAlign="start center">
+                                                            <span><i
+                                                                    [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </ng-template>
+
+                                            <ng-template ngbPanelContent>
+                                                <div class="table-responsive plans-table" style="overflow: visible;">
+                                                    <table
+                                                        class="table table-hover table-striped no-border text-wrap mb-0"
+                                                        style="margin-top: 25px;">
+                                                        <thead>
+                                                            <tr class="w-100-p">
+                                                                <td></td>
+                                                                <td style="min-width: 328px;"></td>
+                                                                <div fxLayout="row" fxLayoutAlign="start start">
+                                                                    <td width="230"
+                                                                        *ngFor="let package of getSortedArray(module.packages)"
+                                                                        style="line-height: 16px;">
+                                                                        <div class="title">FMS {{package.name}}</div>
+                                                                    </td>
+                                                                </div>
+                                                                <td *ngIf="!readonly" width="78"></td>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            <tr *ngFor="let feature of module?.features; let i = index"
+                                                                class="w-100-p">
+                                                                <td>{{i+1}}</td>
+                                                                <td>
+                                                                    <div class="break-line">{{feature.name}}</div>
+                                                                </td>
+                                                                <div fxLayout="row" fxLayoutAlign="start start"
+                                                                    class="text-center">
+                                                                    <td style="text-align: center;" width="230"
+                                                                        *ngFor="let item of getSortedArray(feature?.packages); let k = index">
+                                                                        
+                                                                        <span class="">
+                                                                            <div
+                                                                                class="checkbox-custom checkbox-inline checkbox-danger">
+                                                                                <input type="checkbox" id="{{i}}_{{k}}"
+                                                                                    name="{{i}}_{{k}}"
+                                                                                    [checked]="item.is_selected"
+                                                                                    [value]="item.is_selected"
+                                                                                    [disabled]="true" required>
+
+                                                                                <label for="{{i}}_{{k}}"></label>
+                                                                            </div>
+                                                                        </span>
+                                                                    </td>
+                                                                </div>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </ng-template>
+                                        </ngb-panel>
+                                    </ng-container>
+                                </ng-container>
+
+                                <ng-container *ngIf="item.usecase_name === 'Asset Tracking'">
+                                    <ngb-panel id="acc-0" class="custom-panel-body">
+                                        <ng-template ngbPanelHeader let-opened="opened">
+                                            <button ngbPanelToggle class="w-100-p btn" style="color: #f60000;">
+                                                <div class="w-100-p" fxLayout="row"
+                                                    fxLayoutAlign="space-between center">
+                                                    <div class="fw-300 fs-15">
+                                                        <i class="ri-pie-chart-box-line" class="mr-8"></i>
+                                                        <span> Dashboard </span>
+                                                    </div>
+                                                    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                                        <span><i
+                                                                [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </ng-template>
+
+                                        <ng-template ngbPanelContent>
+                                            <div class="table-responsive plans-table" style="overflow: visible;">
+                                                <table class="table table-hover table-striped no-border text-wrap mb-0"
+                                                    style="margin-top: 25px;">
+                                                    <thead>
+                                                        <tr class="w-100-p">
+                                                            <td></td>
+                                                            <td style="min-width: 355px;"></td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start">
+                                                                <td width="174"
+                                                                    *ngFor="let package of getSortedArray(responseOFATAPI.packages)"
+                                                                    style="line-height: 16px;">
+                                                                    <div class="title">AT {{package.name}}</div>
+                                                                </td>
+                                                            </div>
+                                                            <td *ngIf="!readonly" width="78"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let feature of responseOFATAPI?.features; let i = index"
+                                                            class="w-100-p">
+                                                            <td>{{i+1}}</td>
+                                                            <td style="min-width: 355px;">
+                                                                <div class="break-line">{{feature.name}}</div>
+                                                            </td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start"
+                                                                class="text-center">
+                                                                <td style="text-align: center;" width="174"
+                                                                    *ngFor="let item of getSortedArray(feature?.packages); let k = index">
+                                                                
+                                                                    <span class="">
+                                                                        <div
+                                                                            class="checkbox-custom checkbox-inline checkbox-danger">
+                                                                            <input type="checkbox" id="{{i}}_{{k}}"
+                                                                                name="{{i}}_{{k}}"
+                                                                                (change)="inputboxChanged(feature, item, $event)"
+                                                                                [checked]="item.is_selected"
+                                                                                [value]="item.is_selected"
+                                                                                [disabled]="false" required>
+
+                                                                            <label for="{{i}}_{{k}}"></label>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                            </div>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </ng-template>
+                                    </ngb-panel>
+
+                                    <ngb-panel id="acc-1" class="custom-panel-body">
+                                        <ng-template ngbPanelHeader let-opened="opened">
+                                            <button ngbPanelToggle class="w-100-p btn" style="color: #f60000;">
+                                                <div class="w-100-p" fxLayout="row"
+                                                    fxLayoutAlign="space-between center">
+                                                    <div class="fw-300 fs-15">
+                                                        <i class="ri-store-3-line" class="mr-8"></i>
+                                                        <span> Assets </span>
+                                                    </div>
+                                                    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                                        <span><i
+                                                                [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </ng-template>
+
+                                        <ng-template ngbPanelContent>
+                                            <div class="table-responsive plans-table" style="overflow: visible;">
+                                                <table class="table table-hover table-striped no-border text-wrap mb-0"
+                                                    style="margin-top: 25px;">
+                                                    <thead>
+                                                        <tr class="w-100-p">
+                                                            <td></td>
+                                                            <td style="min-width: 355px;"></td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start">
+                                                                <td width="174"
+                                                                    *ngFor="let package of getSortedArray(responseOFATDashboardAPI.packages)"
+                                                                    style="line-height: 16px;">
+                                                                    <div class="title">AT {{package.name}}</div>
+                                                                </td>
+                                                            </div>
+                                                            <td *ngIf="!readonly" width="78"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let feature of responseOFATDashboardAPI?.features; let i = index"
+                                                            class="w-100-p">
+                                                            <td>{{i+1}}</td>
+                                                            <td style="min-width: 355px;">
+                                                                <div class="break-line">{{feature.name}}</div>
+                                                            </td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start"
+                                                                class="text-center">
+                                                                <td style="text-align: center;" width="174"
+                                                                    *ngFor="let item of getSortedArray(feature?.packages); let k = index">
+                                                                    <span class="">
+                                                                        <div
+                                                                            class="checkbox-custom checkbox-inline checkbox-danger">
+                                                                            <input type="checkbox" id="{{i}}_{{k}}"
+                                                                                name="{{i}}_{{k}}"
+                                                                                (change)="inputboxChanged(feature, item, $event)"
+                                                                                [checked]="item.is_selected"
+                                                                                [value]="item.is_selected"
+                                                                                [disabled]="false" required>
+
+                                                                            <label for="{{i}}_{{k}}"></label>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                            </div>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </ng-template>
+                                    </ngb-panel>
+
+                                    <ngb-panel id="acc-2" class="custom-panel-body">
+                                        <ng-template ngbPanelHeader let-opened="opened">
+                                            <button ngbPanelToggle class="w-100-p btn" style="color: #f60000;">
+                                                <div class="w-100-p" fxLayout="row"
+                                                    fxLayoutAlign="space-between center">
+                                                    <div class="fw-300 fs-15">
+                                                        <i class="ri-store-line" class="mr-8"></i>
+                                                        <span> Asset Inventory </span>
+                                                    </div>
+                                                    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                                        <span><i
+                                                                [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </ng-template>
+
+                                        <ng-template ngbPanelContent>
+                                            <div class="table-responsive plans-table" style="overflow: visible;">
+                                                <table class="table table-hover table-striped no-border text-wrap mb-0"
+                                                    style="margin-top: 25px;">
+                                                    <thead>
+                                                        <tr class="w-100-p">
+                                                            <td></td>
+                                                            <td style="min-width: 355px;"></td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start">
+                                                                <td width="174"
+                                                                    *ngFor="let package of getSortedArray(responseOFATAlertAPI.packages)"
+                                                                    style="line-height: 16px;">
+                                                                    <div class="title">AT {{package.name}}</div>
+                                                                </td>
+                                                            </div>
+                                                            <td *ngIf="!readonly" width="78"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let feature of responseOFATAlertAPI?.features; let i = index"
+                                                            class="w-100-p">
+                                                            <td>{{i+1}}</td>
+                                                            <td style="min-width: 355px;">
+                                                                <div class="break-line">{{feature.name}}</div>
+                                                            </td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start"
+                                                                class="text-center">
+                                                                <td style="text-align: center;" width="174"
+                                                                    *ngFor="let item of getSortedArray(feature?.packages); let k = index">
+                                                                    
+                                                                    <span class="">
+
+                                                                        <div
+                                                                            class="checkbox-custom checkbox-inline checkbox-danger">
+                                                                            <input type="checkbox" id="{{i}}_{{k}}"
+                                                                                name="{{i}}_{{k}}"
+                                                                                (change)="inputboxChanged(feature, item, $event)"
+                                                                                [checked]="item.is_selected"
+                                                                                [value]="item.is_selected" required>
+
+                                                                            <label for="{{i}}_{{k}}"></label>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                            </div>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </ng-template>
+                                    </ngb-panel>
+
+                                    <ngb-panel id="acc-3" class="custom-panel-body">
+                                        <ng-template ngbPanelHeader let-opened="opened">
+                                            <button ngbPanelToggle class="w-100-p btn" style="color: #f60000;">
+                                                <div class="w-100-p" fxLayout="row"
+                                                    fxLayoutAlign="space-between center">
+                                                    <div class="fw-300 fs-15">
+                                                        <i class="ri-stack-line" class="mr-8"></i>
+                                                        <span> Allocate / Lease </span>
+                                                    </div>
+                                                    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                                        <span><i
+                                                                [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </ng-template>
+
+                                        <ng-template ngbPanelContent>
+                                            <div class="table-responsive plans-table" style="overflow: visible;">
+                                                <table class="table table-hover table-striped no-border text-wrap mb-0"
+                                                    style="margin-top: 25px;">
+                                                    <thead>
+                                                        <tr class="w-100-p">
+                                                            <td></td>
+                                                            <td style="min-width: 355px;"></td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start">
+                                                                <td width="174"
+                                                                    *ngFor="let package of getSortedArray(responseOFAAllocateAPI.packages)"
+                                                                    style="line-height: 16px;">
+                                                                    <div class="title">AT {{package.name}}</div>
+                                                                </td>
+                                                            </div>
+                                                            <td *ngIf="!readonly" width="78"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let feature of responseOFAAllocateAPI?.features; let i = index"
+                                                            class="w-100-p">
+                                                            <td>{{i+1}}</td>
+                                                            <td style="min-width: 355px;">
+                                                                <div class="break-line">{{feature.name}}</div>
+                                                            </td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start"
+                                                                class="text-center">
+                                                                <td style="text-align: center;" width="174"
+                                                                    *ngFor="let item of getSortedArray(feature?.packages); let k = index">
+                                                                    
+                                                                    <span class="">
+
+                                                                        <div
+                                                                            class="checkbox-custom checkbox-inline checkbox-danger">
+                                                                            <input type="checkbox" id="{{i}}_{{k}}"
+                                                                                name="{{i}}_{{k}}"
+                                                                                (change)="inputboxChanged(feature, item, $event)"
+                                                                                [checked]="item.is_selected"
+                                                                                [value]="item.is_selected"
+                                                                                [disabled]="false" required>
+
+                                                                            <label for="{{i}}_{{k}}"></label>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                            </div>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </ng-template>
+                                    </ngb-panel>
+
+                                    <ngb-panel id="acc-4" class="custom-panel-body">
+                                        <ng-template ngbPanelHeader let-opened="opened">
+                                            <button ngbPanelToggle class="w-100-p btn" style="color: #f60000;">
+                                                <div class="w-100-p" fxLayout="row"
+                                                    fxLayoutAlign="space-between center">
+                                                    <div class="fw-300 fs-15">
+                                                        <i class="ri-user-line" class="mr-8"></i>
+                                                        <span> User & Admin </span>
+                                                    </div>
+                                                    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                                        <span><i
+                                                                [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </ng-template>
+
+                                        <ng-template ngbPanelContent>
+                                            <div class="table-responsive plans-table" style="overflow: visible;">
+                                                <table class="table table-hover table-striped no-border text-wrap mb-0"
+                                                    style="margin-top: 25px;">
+                                                    <thead>
+                                                        <tr class="w-100-p">
+                                                            <td></td>
+                                                            <td style="min-width: 355px;"></td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start">
+                                                                <td width="174"
+                                                                    *ngFor="let package of getSortedArray(responseOFATConfigAPI.packages)"
+                                                                    style="line-height: 16px;">
+                                                                    <div class="title">AT {{package.name}}</div>
+                                                                </td>
+                                                            </div>
+                                                            <td *ngIf="!readonly" width="78"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let feature of responseOFATConfigAPI?.features; let i = index"
+                                                            class="w-100-p">
+                                                            <td>{{i+1}}</td>
+                                                            <td style="min-width: 355px;">
+                                                                <div class="break-line">{{feature.name}}</div>
+                                                            </td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start"
+                                                                class="text-center">
+                                                                <td style="text-align: center;" width="174"
+                                                                    *ngFor="let item of getSortedArray(feature?.packages); let k = index">
+                                                                    
+                                                                    <span class="">
+                                                                        <div
+                                                                            class="checkbox-custom checkbox-inline checkbox-danger">
+                                                                            <input type="checkbox" id="{{i}}_{{k}}"
+                                                                                name="{{i}}_{{k}}"
+                                                                                (change)="inputboxChanged(feature, item, $event)"
+                                                                                [checked]="item.is_selected"
+                                                                                [value]="item.is_selected"
+                                                                                [disabled]="false" required>
+
+                                                                            <label for="{{i}}_{{k}}"></label>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                            </div>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </ng-template>
+                                    </ngb-panel>
+
+                                    <ngb-panel id="acc-5" class="custom-panel-body">
+                                        <ng-template ngbPanelHeader let-opened="opened">
+                                            <button ngbPanelToggle class="w-100-p btn" style="color: #f60000;">
+                                                <div class="w-100-p" fxLayout="row"
+                                                    fxLayoutAlign="space-between center">
+                                                    <div class="fw-300 fs-15">
+                                                        <i class="ri-pie-chart-box-line" class="mr-8"></i>
+                                                        <span> Reports </span>
+                                                    </div>
+                                                    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                                        <span><i
+                                                                [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </ng-template>
+
+                                        <ng-template ngbPanelContent>
+                                            <div class="table-responsive plans-table" style="overflow: visible;">
+                                                <table class="table table-hover table-striped no-border text-wrap mb-0"
+                                                    style="margin-top: 25px;">
+                                                    <thead>
+                                                        <tr class="w-100-p">
+                                                            <td></td>
+                                                            <td style="min-width: 355px;"></td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start">
+                                                                <td width="174"
+                                                                    *ngFor="let package of getSortedArray(responseOFATReportsAPI.packages)"
+                                                                    style="line-height: 16px;">
+                                                                    <div class="title">AT {{package.name}}</div>
+                                                                </td>
+                                                            </div>
+                                                            <td *ngIf="!readonly" width="78"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let feature of responseOFATReportsAPI?.features; let i = index"
+                                                            class="w-100-p">
+                                                            <td>{{i+1}}</td>
+                                                            <td style="min-width: 355px;">
+                                                                <div class="break-line">{{feature.name}}</div>
+                                                            </td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start"
+                                                                class="text-center">
+                                                                <td style="text-align: center;" width="174"
+                                                                    *ngFor="let item of getSortedArray(feature?.packages); let k = index">
+                                                                    
+                                                                    <span class="">
+
+                                                                        <div
+                                                                            class="checkbox-custom checkbox-inline checkbox-danger">
+                                                                            <input type="checkbox" id="{{i}}_{{k}}"
+                                                                                name="{{i}}_{{k}}"
+                                                                                (change)="inputboxChanged(feature, item, $event)"
+                                                                                [checked]="item.is_selected"
+                                                                                [value]="item.is_selected"
+                                                                                [disabled]="false" required>
+
+                                                                            <label for="{{i}}_{{k}}"></label>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                            </div>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </ng-template>
+                                    </ngb-panel>
+
+                                    <ngb-panel id="acc-6" class="custom-panel-body">
+                                        <ng-template ngbPanelHeader let-opened="opened">
+                                            <button ngbPanelToggle class="w-100-p btn" style="color: #f60000;">
+                                                <div class="w-100-p" fxLayout="row"
+                                                    fxLayoutAlign="space-between center">
+                                                    <div class="fw-300 fs-15">
+                                                        <i class="ri-edit-box-line" class="mr-8"></i>
+                                                        <span> Audit & Documents </span>
+                                                    </div>
+                                                    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                                        <span><i
+                                                                [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </ng-template>
+
+                                        <ng-template ngbPanelContent>
+                                            <div class="table-responsive plans-table" style="overflow: visible;">
+                                                <table class="table table-hover table-striped no-border text-wrap mb-0"
+                                                    style="margin-top: 25px;">
+                                                    <thead>
+                                                        <tr class="w-100-p">
+                                                            <td></td>
+                                                            <td style="min-width: 355px;"></td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start">
+                                                                <td width="174"
+                                                                    *ngFor="let package of getSortedArray(responseOFATAnaysticsAPI.packages)"
+                                                                    style="line-height: 16px;">
+                                                                    <div class="title">AT {{package.name}}</div>
+                                                                </td>
+                                                            </div>
+                                                            <td *ngIf="!readonly" width="78"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let feature of responseOFATAnaysticsAPI?.features; let i = index"
+                                                            class="w-100-p">
+                                                            <td>{{i+1}}</td>
+                                                            <td style="min-width: 355px;">
+                                                                <div class="break-line">{{feature.name}}</div>
+                                                            </td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start"
+                                                                class="text-center">
+                                                                <td style="text-align: center;" width="174"
+                                                                    *ngFor="let item of getSortedArray(feature?.packages); let k = index">
+                                                                    
+                                                                    <span class="">
+
+                                                                        <div
+                                                                            class="checkbox-custom checkbox-inline checkbox-danger">
+                                                                            <input type="checkbox" id="{{i}}_{{k}}"
+                                                                                name="{{i}}_{{k}}"
+                                                                                (change)="inputboxChanged(feature, item, $event)"
+                                                                                [checked]="item.is_selected"
+                                                                                [value]="item.is_selected"
+                                                                                [disabled]="false" required>
+
+                                                                            <label for="{{i}}_{{k}}"></label>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                            </div>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </ng-template>
+                                    </ngb-panel>
+
+                                    <ngb-panel id="acc-7" class="custom-panel-body">
+                                        <ng-template ngbPanelHeader let-opened="opened">
+                                            <button ngbPanelToggle class="w-100-p btn" style="color: #f60000;">
+                                                <div class="w-100-p" fxLayout="row"
+                                                    fxLayoutAlign="space-between center">
+                                                    <div class="fw-300 fs-15">
+                                                        <i class="ri-smartphone-line" class="mr-8"></i>
+                                                        <span> Apps </span>
+                                                    </div>
+                                                    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                                        <span><i
+                                                                [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </ng-template>
+
+                                        <ng-template ngbPanelContent>
+                                            <div class="table-responsive plans-table" style="overflow: visible;">
+                                                <table class="table table-hover table-striped no-border text-wrap mb-0"
+                                                    style="margin-top: 25px;">
+                                                    <thead>
+                                                        <tr class="w-100-p">
+                                                            <td></td>
+                                                            <td style="min-width: 355px;"></td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start">
+                                                                <td width="174"
+                                                                    *ngFor="let package of getSortedArray(responseOFATAppsAPI.packages)"
+                                                                    style="line-height: 16px;">
+                                                                    <div class="title">AT {{package.name}}</div>
+                                                                </td>
+                                                            </div>
+                                                            <td *ngIf="!readonly" width="78"></td>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let feature of responseOFATAppsAPI?.features; let i = index"
+                                                            class="w-100-p">
+                                                            <td>{{i+1}}</td>
+                                                            <td style="min-width: 355px;">
+                                                                <div class="break-line">{{feature.name}}</div>
+                                                            </td>
+                                                            <div fxLayout="row" fxLayoutAlign="start start"
+                                                                class="text-center">
+                                                                <td style="text-align: center;" width="174"
+                                                                    *ngFor="let item of getSortedArray(feature?.packages); let k = index">
+                                                                    
+                                                                    <span class="">
+
+                                                                        <div
+                                                                            class="checkbox-custom checkbox-inline checkbox-danger">
+                                                                            <input type="checkbox" id="{{i}}_{{k}}"
+                                                                                name="{{i}}_{{k}}"
+                                                                                (change)="inputboxChanged(feature, item, $event)"
+                                                                                [checked]="item.is_selected"
+                                                                                [value]="item.is_selected"
+                                                                                [disabled]="false" required>
+
+                                                                            <label for="{{i}}_{{k}}"></label>
+                                                                        </div>
+                                                                    </span>
+                                                                </td>
+                                                            </div>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </ng-template>
+                                    </ngb-panel>
+                                </ng-container>
+
+                            </ngb-accordion>
+                        </ng-container> -->
+                    </ng-template>
+                </div>
+            </ng-container>
+        </div>
+
+        <div [ngbNavOutlet]="nav" class="mt-2 mb-8"></div>
+
+        <div *ngIf="!readonly" fxFlex="100" fxLayout="row" fxLayoutAlign="end end">
+            <div>
+                <!-- nav?.activeId == 6 || -->
+                <button class="btn btn-round btn-success" [disabled]="newData.length === 0 || loading"
+                    (click)="onSave(nav)">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </ng-container>
+
+    <div *ngIf="usecases.length === 0">
+        <h5>No usecase found.</h5>
+    </div>
+</div>

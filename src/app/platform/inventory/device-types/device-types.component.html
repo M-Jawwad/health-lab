@@ -1,0 +1,18 @@
+<div class="card w-100-p bg-white" style="border: none; height: 100%;">
+    <img class="loader" *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" width="150px"
+        height="150px">
+    <!-- <h3 class="fs-14 fw-600 p-16 pt-10 pb-10 mb-0" style="border-bottom: 1px solid #ececec;">List
+        <i class="ri-information-line info grey-400 align-middle fw-200" container="body" ngbPopover="Some help information goes here"
+            triggers="mouseenter:mouseleave" placement="top"></i>
+    </h3> -->
+
+    <h3 class="fs-14 fw-600 p-16 pt-10 pb-10 mb-0" style="border-bottom: 1px solid #ececec;">Device Types
+        <i class="ri-information-line info grey-400"
+            ngbTooltip="Device Type, Package, Make, Warranty, Category, Connected Sensors, Actions"
+            triggers="mouseenter:mouseleave" container="body" placement="top"></i>
+    </h3>
+
+    <div class="w-100-p p-16" style="height: calc(100% - 40px);">
+        <general-table [config]="config" [actions]="actions" (signals)="onTableSignals($event)"></general-table>
+    </div>
+</div>

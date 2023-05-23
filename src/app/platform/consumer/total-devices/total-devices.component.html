@@ -1,0 +1,73 @@
+<div class="modal-header pt-8 pb-8">
+    <h4 class="modal-title fs-18 fw-300">{{title}}</h4>
+    <button type="button" tabindex="-1" class="close" (click)="onCloseModal()">×</button>
+</div>
+
+<img *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" width="150px" height="150px"
+    style="position: absolute; top: 30%; left: 42%; z-index: 1;">
+
+<div class="modal-body w-100-p" fxLayout="row wrap" style="position: relative; height: calc(100% - 44px);">
+    <div *ngIf="!readonly" fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+        <button class="btn btn-success btn-round" (click)="onDeviceAllocation()">
+            <i class="ri-add-line"></i>
+            <span>Allocate Device</span>
+        </button>
+    </div>
+
+    <table class="table mt-8">
+        <thead>
+            <tr>
+                <td>Device ID</td>
+                <td>Device Type</td>
+                <td>Status</td>
+                <!-- <td>Serial Number</td>-->
+                <td>Default Frequency</td>
+                <td>MSISDN</td>
+                <!-- <td>Allocate Date</td> -->
+                <td *ngIf="!readonly">Deallocate</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <ng-container *ngIf="totalDevices.length > 0">
+                <tr *ngFor="let device of totalDevices; let idx=index">
+                    <td>
+                        <a class="text-overflow" (click)="onDeviceDiagnostic(device)">{{device.device_id}}</a>
+                    </td>
+                    <td>{{device.device_type_name}}</td>
+                    <td>{{device.status}}</td>
+                    <!-- <td>{{device.serial_no}}</td>-->
+                    <td>
+                        <a class="text-overflow" (click)="onDeviceFrequency(device)">{{device.frequency}}</a>
+                    </td>
+                    <td>{{device?.sim_msisdn}}</td>
+                    <!-- <td>{{device.allocate_date * 1000 | date: 'dd/MM/yyyy, hh:mm'}}</td> -->
+                    <td *ngIf="!readonly" class="d-flex justify-content-center" style="border: 0 !important;">
+                        <button class="btn btn-primary h-28 lh-16"
+                            (click)="onDeallocateDevice(device)">DeAllocate</button>
+                        <!-- <input type="checkbox" class="form-check" [(ngModel)]="device.selected" [checked]="device.selected"
+                            (change)="onSelectDevices(device, idx)"> -->
+                    </td>
+                </tr>
+            </ng-container>
+            <ng-container *ngIf="totalDevices.length === 0">
+                <tr>
+                    <div style="margin-top: 4px;">No record found</div>
+                </tr>
+            </ng-container>
+
+        </tbody>
+    </table>
+
+    <div fxFlex="100" class="form-group text-center mb-0">
+        <!-- <button *ngIf="!readonly" type="submit" class="btn btn-success btn-round mr-8"
+            [disabled]="loading || selectedDevices.length === 0" (click)="onSubmit()">
+            <i class="ri-check-fill"></i>
+            <span>{{data?.id ? 'Update' : 'Save'}}</span>
+        </button> -->
+        <button class="btn btn-default btn-round" (click)="onCloseModal()">
+            <i class="ri-close-line"></i>
+            <span>{{readonly ? 'Close' : 'Discard'}}</span>
+        </button>
+    </div>
+</div>

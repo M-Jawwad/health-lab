@@ -1,0 +1,14 @@
+<div class="card w-100-p h-100-p bg-white" style="border: none;">
+    <h3 class="fs-14 fw-600 p-16 pt-10 pb-10 mb-0" style="border-bottom: 1px solid #ececec;">Audit
+        <i class="ri-information-line info grey-400"
+            ngbTooltip="ID, Entity, Actions, Action Details, Action Date, Action By" triggers="mouseenter:mouseleave"
+            container="body" placement="top"></i>
+    </h3>
+
+    <img class="loader" *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" width="150px"
+        height="150px">
+
+    <div class="p-16 w-100-p" fxLayout="row wrap" style="height: calc(100% - 40px);">
+        <general-table class="w-100-p h-100-p" [config]="config" [dataSource]="auditData"></general-table>
+    </div>
+</div>

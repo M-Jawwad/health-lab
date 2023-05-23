@@ -1,0 +1,54 @@
+<div class="modal-header pt-8 pb-8">
+    <h4 class="modal-title fs-18 fw-300">{{title}}</h4>
+    <button type="button" tabindex="-1" class="close" (click)="onCloseModel()">×</button>
+</div>
+<img *ngIf="loading" class="loader" src="/assets/images/block-loader.gif" alt="Loading" width="150px" height="150px">
+<div class="modal-body w-100-p" fxLayout="row wrap" style="position: relative;">
+
+    <form [formGroup]="packageForm" fxFlex="100" fxLayout="row wrap">
+
+        <!-- <div fxFlex="100" class="form-group">
+            <label>Package ID</label>
+            <input type="text" class="form-control" formControlName="package_unique_id">
+            <span class="text-danger" *ngIf="packageForm.controls.package_unique_id.hasError('required') && packageForm.controls.package_unique_id.touched">
+                Please provide package id.
+            </span>
+        </div> -->
+
+        <div fxFlex="100" class="form-group">
+            <label>Package Name</label><span class="text-danger">*</span>
+            <input type="text" class="form-control" formControlName="name" required>
+            <ng-container *ngIf="packageForm.controls.name.dirty">
+                <span class="text-danger" *ngIf="packageForm.controls.name.hasError('required')">
+                    Please provide name of package.
+                </span>
+                <span class="text-danger" *ngIf="packageForm.controls.name.hasError('maxlength')">
+                    Name must be of less than 60 characters
+                </span>
+                <span class="text-danger" *ngIf="packageForm.controls.name.hasError('whitespace')">
+                    Avoid white spaces
+                </span>
+            </ng-container>
+        </div>
+
+        <div fxFlex="100" class="form-group">
+            <label for="name">Package Description</label>
+            <textarea type="text" rows="3" class="form-control" formControlName="description"></textarea>
+            <!-- <span class="text-danger" *ngIf="packageForm.controls.description.hasError('required') && packageForm.controls.description.touched">
+                Please provide name of package.
+            </span> -->
+        </div>
+        
+        <div fxFlex="100" class="form-group text-center mb-0">
+            <button type="submit" (click)="onSubmit()" class="btn btn-success btn-round mr-8" [disabled]="!packageForm.valid || loading">
+                <i class="ri-check-fill"></i>
+                {{data?.id ? 'Update' : 'Save'}}
+            </button>
+            <button class="btn btn-default btn-round" (click)="onCloseModel()">
+                <i class="ri-close-line"></i>
+                Discard
+            </button>
+        </div>
+
+    </form>
+</div>

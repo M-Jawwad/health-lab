@@ -1,0 +1,71 @@
+<div fxLayout="row wrap" style="height: 100%; width: 100%;">
+    <div class="w-100-p modal-header pt-8 pb-8">
+        <h4 class="modal-title fs-18 fw-300">{{title}}</h4>
+        <button type="button" tabindex="-1" class="close" (click)="onCloseModal()">×</button>
+    </div>
+
+    <div class="modal-body w-100-p pt-0" fxLayout="row wrap" style="height: calc(100% - 44px);">
+
+        <div class="w-100-p pt-8" fxLayout="row wrap">
+            <div class="form-check pl-0" fxLayout="row">
+                <input type="checkbox" id="err" class="mr-8" [formControl]="continue_with_error">
+                <label for="err">Continue with error</label>
+            </div>
+            <div fxFlex="100">
+                <ngx-dropzone #dropzone accept=".csv, .xls, .xlsx" [multiple]="false" (change)="onSelectDocs($event)">
+                    <ngx-dropzone-label>Drag & drop your Excel file here</ngx-dropzone-label>
+                    <ngx-dropzone-preview class="custom-class-dropzone-preview" *ngFor="let f of files"
+                        [removable]="true" (removed)="onRemoveDoc(f)">
+                        <ngx-dropzone-label>{{ f.name }}</ngx-dropzone-label>
+                    </ngx-dropzone-preview>
+                </ngx-dropzone>
+            </div>
+
+            <ng-container *ngIf="!!bulkUploadedData">
+                <ul class="w-100-p fs-16 mb-0 mt-2 pl-20">
+                    <li style="color: rgb(98, 168, 234);">Total Requested Records: {{bulkUploadedData?.total_requested_records}}</li>
+                    <li style="color: #5cd29d;">Total Successful Records: {{bulkUploadedData.total_success_operations}}</li>
+                    <li style="color: #dc3545;">Total Failed Records: {{bulkUploadedData.totalFailedRecords}}</li>
+                </ul>
+                <div *ngIf="continue_with_error.value && bulkUploadedData.file_recreation_payload.length > 0">
+                    <a class="text-overflow" (click)="downloadFailedXLS()">Click Here to see failed records</a>
+                </div>
+                <div *ngIf="!continue_with_error.value && showError" fxLayout="row" fxLayoutGap="16px"
+                    class="fs-16 mt-1 mb-1">
+                    <ng-container *ngFor="let item of bulkUploadedData.file_recreation_payload">
+                        <div><b class="red-700">Error!! </b> {{item.Action === 'i' ? 'Insertion' : item.Action === 'u' ?
+                            'Updation' : 'Deletion'}} Failed. Device ID: <b>{{item.Device_ID}} </b>{{item.failure_reason
+                            | titlecase}}
+                        </div>
+                    </ng-container>
+
+                    <button class="btn btn-icon btn-xs btn-default lh-12 h-24"
+                        (click)="showError = false; bulkUploadedData = null">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>
+            </ng-container>
+
+            <hr fxFlex="100" class="mt-0">
+
+            <div fxFlex="100" class="form-group text-center mb-0">
+                <div fxLayout="row" fxLayoutAlign="center start">
+                    <button *ngIf="!readonly" (click)="onBulkUpload()" class="btn btn-success btn-round mr-8" [disabled]="loading || files.length === 0">
+                        <i class="ri-check-fill"></i>
+                        <span>Upload</span>
+                    </button>
+                    <button class="btn btn-default btn-round" (click)="onCloseModal()">
+                        <i class="ri-close-line"></i>
+                        <span>Discard</span>
+                    </button>
+                </div>
+                <p class="mb-0">Click 
+                    <a class="text-overflow" href="https://devdlsvfq.blob.core.windows.net/cob-new-media/device_type/cob-modified.xlsx" style="cursor: pointer;">here</a>
+                    to download the sample excel
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <img class="loader" *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" width="150px" height="150px">
+</div>

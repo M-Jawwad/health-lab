@@ -1,0 +1,83 @@
+<div fxLayout="row wrap" class="input-group dv" style="position: relative;">
+    <div class="input-group">
+        <span class="input-group-text" for="ph" id="ph" style="border-right: none;" (click)="toggleSearchColumns()">
+            <!-- <i class="input-search-icon ri-search-line"></i> -->
+            <i class="ri-search-line"></i>
+            <i class="ri-arrow-down-s-line" style="cursor: pointer;"></i>
+        </span>
+        <input #search type="text" (keyup)="onSearch2(search.value);" (click)="expandSearch = false" id="search"
+            class="form-control" [formControl]="searchControl" [placeholder]="placeholder">
+        <div class="input-group-append" style="cursor: pointer;" (click)="onSearch2(search.value);">
+            <span class="input-group-text">Go</span>
+        </div>
+    </div>
+
+    <div id="sr-div" *ngIf="expandSearch" class="w-220 search-box">
+        <div fxFlex="100" fxLayout="row wrap">
+            <ng-container *ngFor="let column of data; let last=last; let idx=index">
+                <div fxFlex="100" fxLayoutAlign="start center" class="h-32 search-item">
+                    <input type="checkbox" id="{{column.id}}" [value]="column.column" [(ngModel)]="column.checked"
+                        (change)="onSelectColumn(column, idx); searchControl.reset()">
+                    <label style="padding-left: 8px; flex: 1; cursor: pointer;" class="mb-0"
+                        for="{{column.id}}">{{column.title }}</label>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+    <div *ngIf="showFilters && columns.length > 0" fxFlex="100" fxLayout="row wrap" fxLayoutGap="8px"
+        class="filter-div">
+
+        <ng-container *ngIf="colHasValue">
+            <div fxFlex="5" (click)="expandSearchedCols = !expandSearchedCols">
+                <button class="btn btn-icon btn-xs pt-0">
+                    <i class="fs-16"
+                        ngClass="{{expandSearchedCols ? 'ri-arrow-down-s-fill' : 'ri-arrow-right-s-fill' }}"></i>
+                </button>
+            </div>
+            <div *ngIf="expandSearchedCols" fxFlex fxLayout="row wrap">
+                <ng-container *ngFor="let col of columns; let last=last; let idx=index">
+                    <div *ngIf="col.value !== ''" fxFlex="100" fxLayout="row" fxLayoutAlign="start center"
+                        fxLayoutGap="8px">
+                        <input type="checkbox" [checked]="col.checked" [(ngModel)]="col.checked"
+                            (change)="onRemoveColumn(col, idx)">
+                        <div fxFlex fxLayout="row" class="mr-0">
+                            <span fxLayoutAlign="center center" style="width: 24px; background: #26c981;">
+                                <i class="ri-filter-line"></i>
+                            </span>
+                            <div class="lh-16 bg-white" style="width: calc(100% - 24px); padding: 4px 8px;">
+                                Column {{col.column | titlecase}} contains "{{col.value}}"
+                            </div>
+                        </div>
+                        <button class="btn btn-icon btn-xs" (click)="onRemoveColumn(col, idx)">
+                            <i class="ri-close-line"></i>
+                        </button>
+                    </div>
+                </ng-container>
+            </div>
+
+            <div *ngIf="!expandSearchedCols" fxFlex fxLayout="row">
+                <div *ngIf="columns[colLength - 1].value !== ''" fxFlex="100" fxLayout="row"
+                    fxLayoutAlign="start center" fxLayoutGap="8px">
+                    <input type="checkbox" [(ngModel)]="columns[colLength - 1].checked"
+                        [checked]="columns[colLength - 1].checked"
+                        (click)="onRemoveColumn(columns[columns.length - 1], (columns.length - 1))">
+                    <div fxFlex fxLayout="row" class="mr-0">
+                        <span fxLayoutAlign="center" style="width: 24px; background: #26c981;">
+                            <i class="ri-filter-line"></i>
+                        </span>
+                        <div class="lh-16 bg-white" style="width: calc(100% - 24px); padding: 4px 8px;">
+                            Column {{columns[colLength - 1].column | titlecase}} contains "{{columns[colLength -
+                            1].value}}"
+                        </div>
+                    </div>
+                    <button class="btn btn-icon btn-xs"
+                        (click)="onRemoveColumn(columns[columns.length - 1], (columns.length - 1))">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+
+    </div>
+</div>

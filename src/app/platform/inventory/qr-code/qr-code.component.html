@@ -1,0 +1,94 @@
+<div class="card w-100-p bg-white" style="border: none; height: 100%;">
+    <img class="loader" *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" width="150px"
+        height="150px">
+
+    <h3 class="fs-14 fw-600 p-16 pt-10 pb-10 mb-0" style="border-bottom: 1px solid #ececec;">QR Code
+        <i class="ri-information-line info grey-400" ngbTooltip="Device ID, Device Type, Create Date"
+            triggers="mouseenter:mouseleave" container="body" placement="top"></i>
+    </h3>
+
+    <div class="w-100-p p-16" fxLayout="row wrap" style="height: calc(100% - 40px);">
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between start">
+            <div fxFlex="22" class="form-group">
+                <app-search fxFlex [cols]="cols" [showFilters]="showFilters" (signal)="onSearch($event)"></app-search>
+                <!-- <div class="input-group">
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #d="ngbDatepicker"
+                        (click)="d.toggle()">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary btn-icon" (click)="$event.stopPropagation(); d.toggle()"
+                            type="button" style="padding: 0 8px; border-radius: 0px; border-color: #ced4da;">
+                            <i class="ri-calendar-2-line"></i>
+                        </button>
+                    </div>
+                </div> -->
+
+            </div>
+
+            <div fxFlex="15">
+                <button class="btn btn-success btn-round" [disabled]="selectedDevices.length === 0"
+                    (click)="onGenerateQRCode()">
+                    <i class="ri-add-line"></i>
+                    <span>Generate QR Code</span>
+                </button>
+            </div>
+        </div>
+
+        <div fxFlex="100" style="height: calc(100% - 46px);">
+
+            <div style="overflow: auto; flex: 1; max-height: calc(100% - 44px);">
+                <div fxFlex>
+                    <table class="table mb-0" style="width: calc(100% - 1px);">
+                        <thead style="position: sticky; top: -1px;">
+                            <tr>
+                                <th style="text-align: center; padding: 4px !important;" class="w-44">
+                                    <div fxLayout="row" fxLayoutAlign="center center">
+                                        <input type="checkbox" [(ngModel)]="allSelected" (change)="onMasterToggle()">
+                                    </div>
+                                </th>
+                                <th sortable="device_id" (sort)="onSort($event)">Device ID</th>
+                                <th sortable="device_type_name" (sort)="onSort($event)">Device Type</th>
+                                <th sortable="created_at" (sort)="onSort($event)">Created Date</th>
+                                <!-- <th>Action</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="devices.length > 0">
+                                <tr *ngFor="let device of devices;  let idx=index">
+                                    <td style="text-align: center;" class="w-44">
+                                        <div fxLayout="row" fxLayoutAlign="center center">
+                                            <input type="checkbox" [(ngModel)]="device.selected"
+                                                [checked]="device.selected" (change)="onSelectDevice(device)">
+                                        </div>
+                                    </td>
+                                    <td>{{device.device_id}}</td>
+                                    <td>{{device.device_type_name}}</td>
+                                    <td>{{device.created_at | date: 'dd-MM-yyyy'}}</td>
+                                    <!-- <td>
+                                        <a class="btn btn-primary btn-icon mr-8" style="padding: 3px;">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+                                        <a class="btn btn-danger btn-icon" style="padding: 3px;">
+                                            <i class="ri-delete-bin-2-line"></i>
+                                        </a>
+                                    </td> -->
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="!loading && devices.length === 0">
+                                <tr>
+                                    <td colspan="4">No Record Found</td>
+                                </tr>
+                            </ng-container>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <app-pagination *ngIf="devices.length > 0" [length]="count" (pageChange)="onPageChange($event)">
+            </app-pagination>
+        </div>
+    </div>
+    <!-- <div class="w-100-p p-16" style="height: calc(100% - 40px);">
+        <general-table [config]="config" [actions]="actions" (signals)="onTableSignals($event)"></general-table>
+    </div> -->
+</div>

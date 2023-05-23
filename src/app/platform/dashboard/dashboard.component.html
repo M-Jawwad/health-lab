@@ -1,0 +1,122 @@
+<div fxFlex="100" fxLayout="row wrap" class="w-100-p">
+    <div class="w-100-p h-60 page-head shadow">
+        Customer Platform Dashboard
+    </div>
+
+    <div fxFlex="100" fxLayout="row wrap">
+        <div fxFlex="100" fxLayout="row" fxLayoutGap="16px">
+            <div fxFlex="25" class="panel panel-default card round mb-0 h-120">
+                <div class="panel-heading h-36">
+                    <h3 class="fs-14 fw-600" style="padding: 10px;">Customers</h3>
+                </div>
+
+                <div class="panel-body h-80 p-16 pt-0" style="border-top: 1px solid rgba(0, 0, 0, 0.075);"
+                    fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="space-between center">
+                    <img src="./assets/images/customer-link.png" alt="" height="40">
+
+                    <div fxFlex fxLayout="column">
+                        <!-- <div>Customer</div> -->
+                        <div class="fs-20 fw-600 red-900">{{customerInfo?.total_customer}}</div>
+                    </div>
+
+                    <div fxFlex fxLayout="column">
+                        <div class="mb-10">Active: <span
+                                class="fw-600 red-900">{{customerInfo?.total_active_customer}}</span></div>
+                        <div>Inactive: <span class="fw-600 red-900">{{customerInfo?.total_inactive_customer}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scrl-div h-120">
+                <div *ngIf="usecaseSubscriptionCards.length >= 4" class="bttn-left">
+                    <button class="btn btn-icon btn-sm btn-danger btn-round white lh-18 h-28 w-28"
+                        (click)="scrollLeft(widget)" style="padding: 4px;">
+                        <i class="ri-arrow-left-s-line"></i>
+                    </button>
+                </div>
+
+                <div #widget class="w-100-p pr-16" style="overflow: hidden; display: -webkit-box !important;">
+                    <ng-container *ngFor="let card of usecaseSubscriptionCards; let idx=index; let last=last">
+                        <div class="panel card round h-120 mr-12" [class.mr-0]="last" style="min-width: 23.5%;">
+                            <div class="panel-heading h-36">
+                                <h3 class="fs-14 fw-600" style="padding: 10px;">{{card.name}}</h3>
+                            </div>
+
+                            <div class="panel-body h-80 p-16 pt-0" style="border-top: 1px solid rgba(0, 0, 0, 0.075);"
+                                fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="space-between center">
+                                <img src="{{card.icon}}" alt="" width="40" height="40">
+
+                                <div fxFlex fxLayout="column" class="text-center">
+                                    <div class="mt-10 mb-10 fs-14">Subscriptions</div>
+                                    <div class="fs-24 fw-600 red-900">{{card.count}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <div *ngIf="usecaseSubscriptionCards.length >= 4" class="bttn-right">
+                    <button class="btn btn-icon btn-sm btn-danger btn-round white lh-18 h-28 w-28"
+                        (click)="scrollRight(widget)" style="padding: 4px;">
+                        <i class="ri-arrow-right-s-line"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div fxFlex="100" class="mt-12 mb-12" fxLayoutGap="12px" fxLayoutAlign="space-between start">
+            <app-pie-chart fxFlex [title]="'Usecases vs Subscriptions'" [data]="data" [makeChart]="true">
+            </app-pie-chart>
+
+            <app-pie-chart fxFlex [title]="'Total Devices'" [devicesData]="devicesData" [make3DChart]="true">
+            </app-pie-chart>
+        </div>
+
+        <div fxFlex="100" class="mt-12 mb-12" fxLayoutGap="12px" fxLayoutAlign="space-between start">
+            <app-xy-chart fxFlex [title]="'Devices Statistics'" [data]="devicesStats"></app-xy-chart>
+
+            <div fxFlex="25">
+                <ng-container *ngFor="let device of devicesInfo;">
+                    <div class="card panel round round w-100-p mb-0">
+                        <div class="panel-heading h-36">
+                            <div class="fs-14 fw-600 p-10">{{device.title}}</div>
+                        </div>
+
+                        <div class="panel-body h-300 p-16 text-center"
+                            style="border-top: 1px solid rgba(0, 0, 0, 0.075);">
+                            <div class="fs-26"><b>{{device.data.total_devices}}</b></div>
+                            <circle-progress [percent]="percent" [startFromZero]="true" [maxPercent]="percent">
+                            </circle-progress>
+
+                            <div class="w-100-p" fxLayout="row wrap">
+                                <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between start">
+                                    <div>Online</div>
+                                    <div>{{onlineDevices}}</div>
+                                </div>
+                                <ngb-progressbar type="success" fxFlex="100" height="10px" [value]="onlineDevices" [animated]="true" >
+                                </ngb-progressbar>
+                                <!-- [max]="onlineDevices" -->
+
+                                <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between start">
+                                    <div>Offline</div>
+                                    <div>{{offlineDevices}}</div>
+                                </div>
+                                <ngb-progressbar type="danger" fxFlex="100" height="10px" [value]="offlineDevices" [animated]="true" >
+                                </ngb-progressbar>
+                                <!-- [max]="offlineDevices" -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <app-circle-progress fxFlex [title]="device.title" [data]="device.data"></app-circle-progress> -->
+                </ng-container>
+            </div>
+        </div>
+
+
+        <!-- <div fxFlex fxLayout="row" fxLayoutGap="12px" class="mt-12">
+
+
+        </div> -->
+    </div>
+</div>

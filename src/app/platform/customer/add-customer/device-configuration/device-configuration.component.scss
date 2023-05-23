@@ -1,0 +1,40 @@
+.table {
+    >thead {
+        background-color: #ececec;
+
+        >tr >td {
+            height: 30px !important;
+            padding: 0 30px 0 4px !important;
+            font-weight: 700 !important;
+            font-size: 12px !important;
+            line-height: 28px;
+            position: relative;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+    }
+
+    >tbody {
+        tr, td {
+            padding: 4px !important;
+            border: 1px solid #ececec !important;
+            height: 32px !important;
+            vertical-align: middle;
+            
+            a {
+                text-decoration: none !important;
+                width: 24px !important;
+                height: 24px !important;
+                line-height: 16px !important;
+            }
+
+            a :hover {
+                color: #000;
+            }
+        }
+
+        .even {
+            background-color: rgba(243, 247, 249, .3) !important;
+        }
+    }
+}

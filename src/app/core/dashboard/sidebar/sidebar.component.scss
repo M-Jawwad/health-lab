@@ -1,0 +1,31 @@
+:host {
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Vodafone Lt';
+    background: #fff;
+}
+
+.site-menu-item {
+    padding: 0;
+    border-top: 1px solid #f9f9f9;
+    cursor: pointer;
+}
+
+.site-menu-item :hover {
+    background-color: #e9ecef;
+}
+
+.active {
+    background-color: #e9ecef;
+}
+
+a {
+    color: #444 !important;
+    line-height: 36px;
+    text-decoration: none;
+    padding: 0 16px;
+}
+
+.site-menu-icon {
+    color: #e60000;
+}

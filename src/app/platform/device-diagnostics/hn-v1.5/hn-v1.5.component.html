@@ -1,0 +1,78 @@
+<div *ngIf="loading" class="waiting">
+    <div class="modal-header pt-8 pb-8">
+        <h4 class="modal-title fs-18 fw-300">Please Wait</h4>
+        <button type="button" tabindex="-1" class="close" (click)="abortVerification()">×</button>
+    </div>
+
+    <div fxLayout="row wrap" fxLayoutAlign="space-between center" class="w-100-p qb-loader">
+        <div fxFlex="100" style="text-align: center;">
+            <img src="./assets/images/progress-icon.jpg" alt="" style="height: 80px;">
+            <h4>Loading...</h4>
+        </div>
+
+        <div fxFlex="100" class="btn-abort">
+            <button class="btn btn-danger btn-round" (click)="abortVerification()">Abort Verification</button>
+        </div>
+    </div>
+</div>
+
+<ng-container *ngIf="!loading">
+    <div class="modal-header pt-8 pb-8">
+        <h4 class="modal-title fs-18 fw-300">{{title}}</h4>
+        <div fxLayout="row">
+            <div class="status-container">
+                <span class="status" [style.background]="deviceStatus ? '#36ab7a' : '#f96868' "></span>
+                <span>{{deviceStatus ? 'Online' : 'Offline'}}</span>
+            </div>
+            <button type="button" tabindex="-1" class="close" (click)="onCloseModel()">×</button>
+        </div>
+    </div>
+
+    <img *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" srcset="" width="150px" height="150px"
+        style="position: absolute; top: 30%; left: 42%;">
+
+    <div class="modal-body w-100-p" fxLayout="row wrap" style="position: relative;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="32px">SR #</th>
+                    <th>PARAMETERS</th>
+                    <th>DETAILS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="oldDataSource.length > 0">
+                    <tr *ngFor="let device of oldDataSource; let idx=index let odd=odd" [class.odd]="odd">
+                        <td>{{idx + 1}}</td>
+                        <td>{{device.title}}</td>
+                        <td>{{device.deviceId}}</td>
+                    </tr>
+                </ng-container>
+                <ng-container *ngIf="oldDataSource.length === 0">
+                    <tr>
+                        <td colspan="3">No Record Found</td>
+                    </tr>
+                </ng-container>
+
+            </tbody>
+        </table>
+
+        <div fxFlex="100" fxLayout="row wrap" class="p-16 pb-0">
+            <div fxFlex="100" fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start start">
+                <button fxFlex class="btn btn-success btn-round" [class.disabled]="!deviceStatus"
+                    (click)="SendActionToDevice('beep')">Beep</button>
+                <button fxFlex class="btn btn-success btn-round" [class.disabled]="!deviceStatus"
+                    (click)="SendActionToDevice('reboot')">Reboot</button>
+                <button fxFlex class="btn btn-success btn-round" [class.disabled]="!deviceStatus"
+                    (click)="SendActionToDevice('where')">Query Location</button>
+            </div>
+
+            <div fxFlex="100" fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start start">
+                <button fxFlex class="btn btn-success btn-round mt-12" [class.disabled]="!deviceStatus"
+                    (click)="SendActionToDevice('checkFrequency')">Check Frequency</button>
+                <button fxFlex class="btn btn-success btn-round mt-12" (click)="deviceStatusBySDK()">Refresh</button>
+            </div>
+
+        </div>
+    </div>
+</ng-container>

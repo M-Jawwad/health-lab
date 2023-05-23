@@ -1,0 +1,167 @@
+@import "./colors";
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+::-webkit-scrollbar:vertical {
+    width: 8px;
+    border-radius: 15px;
+    margin-left: -10px;
+}
+
+::-webkit-scrollbar:horizontal {
+    height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    margin-left: -10px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 15px;
+    border-radius: 15px;
+    margin-left: -10px;
+}
+
+body {
+    font-family: 'Vodafone Rg', sans-serif;
+    font-size: 14px !important;
+}
+
+.navbar-default {
+    background: linear-gradient(90deg, rgba(132, 0, 0, 1) 0%, rgba(254, 0, 0, 1) 100%)!important;
+}
+
+.h4 h4 {
+    font-size: 18px !important;
+}
+
+.form-group {
+    margin-bottom: 0.625rem !important;
+
+    >label {
+        margin-bottom: 0.25rem !important;
+    }
+}
+
+.form-control {
+    height: auto;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    font-family: 'Vodafone Rg', sans-serif;
+    font-size: 14px !important;
+    color: #000;
+}
+
+input.form-control {
+    height: 36px !important;
+}
+
+.ng-select-container {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border-color: #ccc !important;
+}
+:focus.ng-select-container {
+    border-color: #ccc !important;
+}
+
+.input-group-text {
+    height: 36px !important;
+    border-radius: 0 !important;
+}
+
+.btn-default {
+    background-color: #e4eaec !important;
+    border-color: #e4eaec !important;
+
+}
+.btn-default:hover {
+    background: #f3f7f9 !important;
+}
+
+.btn-round {
+    border-radius: 20px !important;
+}
+
+.btn-primary {
+    background-color: rgb(98, 168, 234) !important;
+    border-color: rgb(98, 168, 234) !important;
+    
+    >:hover {
+        background-color: #89bceb !important;
+        border-color: #89bceb !important;
+    }
+}
+
+.btn:focus, .btn-primary:focus, .btn-danger:focus, .btn-default, .btn-success:focus {
+    box-shadow: none !important;
+}
+
+.btn-danger {
+    background-color: #E60000 !important;
+    box-shadow: none !important;
+}
+
+.btn-success {
+    background-color: #46be8a !important;
+    border-color: #46be8a !important;
+}
+
+.btn-success:hover {
+    background-color: #5cd29d !important;
+    border-color: #5cd29d !important;
+}
+
+input[type="checkbox"] {
+    height: 18px;
+    width: 18px;
+}
+
+.checkbox-custom label::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    padding-top: 0px;
+    margin-left: -19px;
+    font-size: 12px;
+    line-height: 20px;
+    color: #76838f;
+    text-align: center;
+}
+
+// .custom input[type="checkbox"]:checked+label::after,
+// .custom input[type="radio"]:checked+label::after {
+//     font-family: "Ionicons";
+//     content: "\f383";
+// }
+
+.custom .checkbox-danger input[type="checkbox"]:checked+label::before,
+.custom .checkbox-danger input[type="radio"]:checked+label::before {
+    background-color: #f96868 !important;
+    border-color: #f96868 !important;
+}
+
+.checkbox-danger input[type="checkbox"]:checked+label::after,
+.checkbox-danger input[type="radio"]:checked+label::after {
+    color: #fff;
+}
+
+.make-oval {
+    background: #f3f7f9;
+    border-radius: 20px;
+    padding: 4px 8px;
+    margin-right: 2px;
+}
+
+.make-oval:hover {
+    background: #e7ecee;
+}

@@ -1,0 +1,69 @@
+<div class="modal-header pt-8 pb-8">
+    <h4 class="modal-title fs-18 fw-300">{{title}}</h4>
+    <button type="button" tabindex="-1" class="close" (click)="onCloseModel()">×</button>
+</div>
+<div class="modal-body w-100-p" fxLayout="row wrap" style="position: relative;">
+    <img *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" width="150px" height="150px" style="position: absolute; top: 30%; left: 42%;">
+
+    <form [formGroup]="sensorForm" fxFlex="100" fxLayout="row wrap">
+
+        <div fxFlex="100" class="form-group">
+            <label for="name">ID</label><span class="text-danger">*</span>
+            <input type="text" class="form-control" formControlName="unique_id">
+            <ng-container *ngIf="sensorForm.controls.unique_id.dirty">
+                <span class="text-danger" *ngIf="sensorForm.controls.unique_id.hasError('required')">
+                    Please provide ID.
+                </span>
+                <span class="text-danger" *ngIf="sensorForm.controls.unique_id.hasError('maxlength')">
+                    ID must be of less than 60 characters
+                </span>
+                <span class="text-danger" *ngIf="sensorForm.controls.unique_id.hasError('whitespace')">
+                    Avoid white spaces
+                </span>
+            </ng-container>
+        </div>
+
+        <div fxFlex="100" class="form-group">
+            <label for="name">Name</label><span class="text-danger">*</span>
+            <input type="text" class="form-control" formControlName="name" required>
+            <ng-container *ngIf="sensorForm.controls.name.dirty">
+                <span class="text-danger" *ngIf="sensorForm.controls.name.hasError('required')">
+                    Please provide parameter name.
+                </span>
+                <span class="text-danger" *ngIf="sensorForm.controls.name.hasError('maxlength')">
+                    Parameter name must be of less than 60 characters
+                </span>
+                <span class="text-danger" *ngIf="sensorForm.controls.name.hasError('whitespace')">
+                    Avoid white spaces
+                </span>
+            </ng-container>
+        </div>
+        <div fxFlex="100" class="form-group">
+            <label for="name">Response Key</label><span class="text-danger">*</span>
+            <input type="text" class="form-control" formControlName="values" required>
+            <ng-container *ngIf="sensorForm.controls.values.dirty">
+                <span class="text-danger" *ngIf="sensorForm.controls.values.hasError('required')">
+                    Please provide response key.
+                </span>
+                <span class="text-danger" *ngIf="sensorForm.controls.values.hasError('maxlength')">
+                    Key must be of less than 60 characters
+                </span>
+                <span class="text-danger" *ngIf="sensorForm.controls.values.hasError('whitespace')">
+                    Avoid white spaces
+                </span>
+            </ng-container>
+        </div>
+
+        <div fxFlex="100" class="form-group text-center mb-0">
+            <button type="submit" (click)="onSubmit()" class="btn btn-success btn-round mr-8" [disabled]="!sensorForm.valid || loading">
+                <i class="ri-check-fill"></i>
+                {{data?.id ? 'Update' : 'Save'}}
+            </button>
+            <button class="btn btn-default btn-round" (click)="onCloseModel()">
+                <i class="ri-close-line"></i>
+                Discard
+            </button>
+        </div>
+
+    </form>
+</div>

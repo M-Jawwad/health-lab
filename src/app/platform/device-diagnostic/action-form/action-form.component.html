@@ -1,0 +1,272 @@
+<div class="modal-header pt-8 pb-8">
+    <h4 class="modal-title fs-18 fw-300">{{title}}</h4>
+    <button type="button" tabindex="-1" class="close" (click)="onCloseModel()">×</button>
+</div>
+<div class="modal-body w-100-p" fxLayout="row wrap" style="position: relative;">
+    <img *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" width="150px" height="150px" style="position: absolute; top: 30%; left: 42%;">
+
+    <form [formGroup]="actionForm" fxFlex="100" fxLayout="row wrap">
+        <div fxFlex="100" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start start">
+            <div fxFlex="22" class="form-group">
+                <label for="sa">Send Action</label><span class="text-danger"> *</span>
+                <input type="text" class="form-control" id="sa" formControlName="command" placeholder="Send Action" autocomplete="off">
+                <ng-container *ngIf="actionForm.controls['command'].dirty">
+                    <span class="text-danger" *ngIf="actionForm.controls['command'].hasError('required')">
+                        Please provide action to send
+                    </span>
+                    <span class="text-danger" *ngIf="actionForm.controls['command'].hasError('whitespace')">
+                        Avoid white spaces
+                    </span>
+                </ng-container>
+            </div>
+
+            <!-- <div fxFlex="22" class="form-group">
+                <label for="dt">Device Type</label><span class="text-danger"> *</span>
+                <ng-select id="dt" formControlName="deviceType" [clearable]="false" placeholder="Select device type">
+                    <ng-option *ngFor="let device of deviceTypes" [value]="device.id">{{device.device_type_name}}</ng-option>
+                </ng-select>
+                <span class="text-danger" *ngIf="actionForm.controls['deviceType'].touched && actionForm.controls['deviceType'].hasError('required')">
+                    Please select device type
+                </span>
+            </div> -->
+
+            <div fxFlex="22" class="form-group">
+                <label for="bt">Button Text</label> <!-- <span class="text-danger"> *</span> -->
+                <input type="url" class="form-control" id="bt" formControlName="action" placeholder="Enter button text" autocomplete="off">
+                <ng-container *ngIf="actionForm.controls['action'].dirty">
+                    <span class="text-danger" *ngIf="actionForm.controls['action'].hasError('required')">
+                        Please provide text for button
+                    </span>
+                    <span class="text-danger" *ngIf="actionForm.controls['action'].hasError('pattern')">
+                        Please enter valid URL
+                    </span>
+                    <span class="text-danger" *ngIf="actionForm.controls['action'].hasError('whitespace')">
+                        Avoid white spaces
+                    </span>
+                </ng-container>
+            </div>
+
+            <div fxLayout="row" fxLayoutGap="8px" style="align-self: end;" class="mb-8">
+                <input type="checkbox" formControlName="status_check" id="st">
+                <label for="st">Applicable for status check</label>
+                <span class="text-danger" *ngIf="actionForm.controls['status_check'].touched && actionForm.controls['status_check'].hasError('required')">
+                    Please mark status check
+                </span>
+            </div>
+        </div>
+
+        <div fxFlex="100" class="form-group">
+            <div class="input-group">
+                <select formControlName="http_method" class="input-group-text w-120 text-left">
+                    <ng-container *ngFor="let method of apiMethods;">
+                        <option [value]="method.value">{{method.title}}</option>
+                    </ng-container>
+                </select>
+                <input type="text" class="form-control" formControlName="device_sdk" placeholder="Enter URL here">
+            </div>
+            <ng-container *ngIf="actionForm.controls['device_sdk'].invalid">
+                <span class="text-danger" *ngIf="actionForm.controls['device_sdk'].hasError('required')">
+                    Please provide api url
+                </span>
+                <span class="text-danger" *ngIf="actionForm.controls['device_sdk'].hasError('whitespace')">
+                    Avoid white spaces
+                </span>
+            </ng-container>
+        </div>
+    </form>
+
+    <div fxFlex="100">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs nav-pills">
+            <li [ngbNavItem]="'params'">
+                <a ngbNavLink class="fw-700">Params</a>
+                <ng-template ngbNavContent>
+                    <div class="w-100-p" fxLayout="row wrap">
+                        <form fxFlex="100" [formGroup]="paramsForm" (submit)="onSubmitParamsForm()" fxLayout="row" fxLayoutGap="8px">
+                            <div fxFlex="25" class="form-group">
+                                <label for="">Key</label><span class="text-danger"> *</span>
+                                <input type="text" formControlName="key" placeholder="Key" class="form-control">
+                            </div>
+                            <div fxFlex="25" class="form-group">
+                                <label for="">Value</label><span class="text-danger"> *</span>
+                                <input type="text" formControlName="value" placeholder="Value" class="form-control">
+                            </div>
+                            <div fxFlex="25" class="form-group">
+                                <label for="">Description</label>
+                                <input type="text" formControlName="description" placeholder="Description" class="form-control">
+                            </div>
+                            <button type="submit" [disabled]="!paramsForm.valid" class="btn btn-primary lh-20 h-36 mt-12" style="align-self: center">Add</button>
+                        </form>
+
+                        <table *ngIf="params && params.length > 0" fxFlex="100" class="table">
+                            <thead>
+                                <tr>
+                                    <th>SR #</th>
+                                    <th>Key</th>
+                                    <th>Value</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let param of params; let idx=index">
+                                    <td>{{idx+1}}</td>
+                                    <td>{{param.key}}</td>
+                                    <td>{{param.value}}</td>
+                                    <td>{{param.description}}</td>
+                                    <td>
+                                        <a class="btn btn-icon btn-primary mr-8" ngbTooltip="Edit" container="body" style="padding: 3px;" (click)="onEditParam(param, idx)">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+
+                                        <a class="btn btn-icon btn-danger" ngbTooltip="Delete" container="body" style="padding: 3px;" (click)="onRemoveParam(idx)">
+                                            <i class="ri-subtract-line"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-template>
+            </li>
+
+            <li [ngbNavItem]="'headers'">
+                <a ngbNavLink class="fw-700">Headers</a>
+                <ng-template ngbNavContent>
+                    <div class="w-100-p" fxLayout="row wrap">
+                        <form fxFlex="100" [formGroup]="headerForm" (submit)="onSubmitHeadersForm()" fxLayout="row" fxLayoutGap="8px">
+                            <div fxFlex="25" class="form-group">
+                                <label for="">Key</label><span class="text-danger"> *</span>
+                                <input type="text" formControlName="key" placeholder="Key" class="form-control">
+                            </div>
+                            <div fxFlex="25" class="form-group">
+                                <label for="">Value</label><span class="text-danger"> *</span>
+                                <input type="text" formControlName="value" placeholder="Value" class="form-control">
+                            </div>
+                            <div fxFlex="25" class="form-group">
+                                <label for="">Description</label>
+                                <input type="text" formControlName="description" placeholder="Description" class="form-control">
+                            </div>
+                            <button type="submit" [disabled]="!headerForm.valid" class="btn btn-primary lh-20 h-36 mt-12" style="align-self: center">Add</button>
+                        </form>
+
+                        <table *ngIf="headers && headers.length > 0" fxFlex="100" class="table">
+                            <thead>
+                                <tr>
+                                    <th>SR #</th>
+                                    <th>Key</th>
+                                    <th>Value</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let header of headers; let idx=index">
+                                    <td>{{idx+1}}</td>
+                                    <td>{{header.key}}</td>
+                                    <td>{{header.value}}</td>
+                                    <td>{{header.description}}</td>
+                                    <td>
+                                        <a class="btn btn-icon btn-primary mr-8" ngbTooltip="Edit" container="body" style="padding: 3px;" (click)="onEditHeader(header, idx)">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+
+                                        <a class="btn btn-icon btn-danger" ngbTooltip="Delete" container="body" style="padding: 3px;" (click)="onRemoveHeader(idx)">
+                                            <i class="ri-subtract-line"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-template>
+            </li>
+
+            <li *ngIf="showBody" [ngbNavItem]="'body'">
+                <a ngbNavLink class="fw-700">Body</a>
+                <ng-template ngbNavContent>
+                    <div class="w-100-p form-group">
+                        <label for="bd">Body</label><span class="text-danger"> *</span>
+                        <textarea type="text" rows="4" [formControl]="body" placeholder="Enter body" class="form-control"></textarea>
+                    </div>
+                </ng-template>
+            </li>
+
+            <li [ngbNavItem]="'response'">
+                <a ngbNavLink class="fw-700">Response</a>
+                <ng-template ngbNavContent>
+                    <div class="w-100-p" fxLayout="row wrap">
+
+                        <form fxFlex="100" fxLayout="row wrap" [formGroup]="responseForm" (submit)="onSubmitResponseForm()">
+                            <div fxFlex="70" fxLayoutGap="8px">
+                                <div fxFlex class="form-group">
+                                    <label for="">Success</label><span class="text-danger"> *</span>
+                                    <ng-select formControlName="key" [clearable]="false">
+                                        <ng-option [value]="true">True</ng-option>
+                                        <ng-option [value]="false">False</ng-option>
+                                    </ng-select>
+                                    <!-- <input type="text" formControlName="key" placeholder="Key" class="form-control"> -->
+                                </div>
+
+                                <div fxFlex class="form-group">
+                                    <label for="">Response Mapping</label>
+                                    <input type="text" formControlName="description" placeholder="Description" class="form-control">
+                                </div>
+                            </div>
+                            <div fxFlex="77" fxLayoutGap="8px">
+                                <div fxFlex class="form-group">
+                                    <label for="">Response</label><span class="text-danger"> *</span>
+                                    <textarea type="text" rows="4" formControlName="value" placeholder="Value" class="form-control"></textarea>
+                                </div>
+                                <button type="submit" [disabled]="!responseForm.valid" class="btn btn-primary lh-20 h-36 mt-12" style="align-self: center">Add</button>
+                            </div>
+                        </form>
+
+                        <table *ngIf="response && response.length > 0" fxFlex="100" class="table">
+                            <thead>
+                                <tr>
+                                    <th>SR #</th>
+                                    <th>Success</th>
+                                    <th>Response</th>
+                                    <th>Response Mapping</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let param of response; let idx=index">
+                                    <td>{{idx+1}}</td>
+                                    <td>{{param.key}}</td>
+                                    <td>{{param.value}}</td>
+                                    <td>{{param.description}}</td>
+                                    <td>
+                                        <a class="btn btn-icon btn-primary mr-8" ngbTooltip="Edit" container="body" style="padding: 3px;" (click)="onEditResponse(param, idx)">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+
+                                        <a class="btn btn-icon btn-danger" ngbTooltip="Delete" container="body" style="padding: 3px;" (click)="onRemoveResponse(idx)">
+                                            <i class="ri-subtract-line"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </ng-template>
+            </li>
+        </ul>
+
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
+
+    <div fxFlex="100" class="form-group text-center mb-0">
+        <button (click)="onSubmit()" class="btn btn-success btn-round mr-8"
+            [disabled]="!actionForm.valid || loading">
+            <!-- || response.length === 0 || params.length === 0, params and body made optional -->
+            <i class="ri-check-fill"></i>
+            {{data?.id ? 'Update' : 'Save'}}
+        </button>
+        <button class="btn btn-default btn-round" (click)="onCloseModel()">
+            <i class="ri-close-line"></i>
+            Discard
+        </button>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+<div class="w-100-p h-100-p p-0" fxLayout="row wrap" style="position: relative;">
+
+    <img *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" width="150px" height="150px"
+        style="position: absolute; top: 30%; left: 42%;">
+
+    <div fxFlex="100" fxLayout="row wrap">
+        <div class="form-group w-22-p">
+            <label></label>
+            <ng-select [formControl]="usecase" [clearable]="false" class="select" (change)="onSelectUsecase($event)">
+                <ng-option value="">Select usecase</ng-option>
+                <ng-option *ngFor="let usecase of usecases" [value]="usecase.usecase_id">{{usecase.name}}</ng-option>
+            </ng-select>
+        </div>
+
+        <div class="w-100-p">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <td>Feature ID</td>
+                        <td>Features</td>
+                        <td>Status</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="features.length > 0">
+                        <tr *ngFor="let featur of features; let even=even"
+                            [class.even]="even">
+                            <td><b>{{featur.view_id}}</b></td>
+                            <td [class.fw-600]="featur.view_id !== ''">{{featur.module_name}}</td>
+                            <td>
+                                <ng-container *ngIf="featur.status === 'Default'">
+                                    <b>{{featur.status}}</b>
+                                </ng-container>
+                                <ng-container *ngIf="featur.status !== 'Default'">
+                                    <input *ngIf="featur.view_id" [id]="featur.view_id" type="checkbox" [checked]="featur.is_addon"
+                                        [(ngModel)]="featur.is_addon" (change)="onMasterToggle(featur)" [disabled]="!selectedUsecase.is_addon">
+                                    <input *ngIf="!featur.view_id" [id]="featur.view_id" type="checkbox" [checked]="getStatus(featur)"
+                                        [(ngModel)]="featur.is_addon" (change)="onSelectAddon(featur)" [disabled]="!selectedUsecase.is_addon || featur.default">
+                                </ng-container>                                
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <ng-container *ngIf="!loading && features?.length === 0">
+                        <tr colspan="4" style="display: flex; border: none !important;">
+                            No record found
+                        </tr>
+                    </ng-container>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="!readonly && selectedUsecase?.is_addon" class="w-100-p modal-footer">
+            <div fxFlex="100" class="form-group text-center mb-0">
+                <button (click)="onSubmit()" class="btn btn-success btn-round mr-8" [disabled]="loading || selectedModules.length === 0">
+                    <i class="ri-check-fill"></i>
+                    <span>{{data?.id ? 'Update': 'Save'}}</span>
+                </button>
+                <!-- <button type="button" class="btn btn-default btn-round" (click)="usecase.reset()">
+                    <i class="ri-close-line"></i>
+                    <span>Clear</span>
+                </button> -->
+            </div>
+        </div>
+    </div>
+</div>

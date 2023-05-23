@@ -1,0 +1,57 @@
+<div class="card w-100-p" style="border: none; height: 100%;">
+    <h3 class="fs-14 fw-600 p-16 pt-10 pb-10 mb-0" style="border-bottom: 1px solid #ececec;">Consumers
+        <i class="ri-information-line info grey-400"
+            ngbTooltip="Consumer Name, Email, Phone Number, Passport, Total Devices, Status, Actions"
+            triggers="mouseenter:mouseleave" container="body" placement="top"></i>
+    </h3>
+
+    <div class="p-16 w-100-p" fxLayout="row wrap" style="height: calc(100% - 40px);">
+        <div fxLayout="row" fxLayoutGap="4px" class="h-56 mb-12 white text-center w-100-p">
+            <div class="card round p-16 pt-0 pb-0 w-228" fxLayout="row" fxLayoutAlign="space-between center"
+                style="background: #f60000; height: 100%;">
+                <img src="./assets/images/icon-security-white.png" alt="" height="40">
+
+                <div fxFlex fxLayout="column">
+                    <div>Consumers</div>
+                    <div class="fs-20 fw-600">{{cardsInfo.total_consumers}}</div>
+                </div>
+
+                <div fxFlex fxLayout="column">
+                    <div class="mb-10">Active: <span class="fw-600">{{cardsInfo.active_consumers}}</span></div>
+                    <div>Inactive: <span class="fw-600">{{cardsInfo.inactive_consumers}}</span></div>
+                </div>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between start" class="h-100-p scrl-div">
+                <div *ngIf="cardsInfo.usecase_assigned_devices.length > 6" class="bttn-left">
+                    <button class="btn btn-icon btn-sm btn-danger btn-round white lh-18 h-28 w-28"
+                        (click)="scrollLeft(widget)" style="padding: 4px;">
+                        <i class="ri-arrow-left-s-line"></i>
+                    </button>
+                </div>
+
+                <div #widget name="dv" class="h-100-p w-100-p pl-16 pr-16"
+                    style="overflow: hidden; display: -webkit-box !important;">
+                    <ng-container *ngFor="let card of cardsInfo.usecase_assigned_devices; let idx=index; let last=last">
+                        <div class="bg-black-700 card round h-100-p pl-8 pr-8 mr-8" style="min-width: 10%;"
+                            [class.mr-0]="last" fxLayout="column" fxLayoutAlign="center center">
+                            <div>{{card.name}}</div>
+                            <div class="fs-20">{{card.count}}</div>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <div *ngIf="cardsInfo.usecase_assigned_devices.length > 6" class="bttn-right">
+                    <button class="btn btn-icon btn-sm btn-danger btn-round white lh-18 h-28 w-28"
+                        (click)="scrollRight(widget)" style="padding: 4px;">
+                        <i class="ri-arrow-right-s-line"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-100-p" style="height: calc(100% - 68px);">
+            <general-table [config]="config" [actions]="actions" (signals)="onTableSignals($event)"></general-table>
+        </div>
+    </div>
+</div>

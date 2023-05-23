@@ -1,0 +1,144 @@
+<div>
+    <div class="page-header p-12 pl-16 bg-blue-100 w-100-p" style="margin: -8px 0 8px 0;">
+        <h1 *ngIf="!!data" class="page-title fs-20 fw-500">{{data?.company_name}}: #{{data?.id}}</h1>
+        <h1 *ngIf="!data" class="page-title fs-20 fw-500">Customer</h1>
+    </div>
+    <img *ngIf="loading" src="/assets/images/block-loader.gif" alt="Loading" width="150px" height="150px" style="position: absolute; top: 30%; left: 50%; z-index: 1;">
+
+    <ngb-accordion [closeOthers]="true" #acc="ngbAccordion" [activeIds]="activeId">
+        <!-- General Details -->
+        <ngb-panel id="gd">
+            <ng-template ngbPanelHeader let-opened="opened" class="mb-8">
+                <button ngbPanelToggle class="w-100-p btn" style="color: #e60000;">
+                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="space-between center">
+                        <div fxLayoutGap="8px" fxLayoutAlign="start center">
+                            <i class="ri-todo-line"></i>
+                            <span> General Details </span>
+                        </div>
+                        <span><i [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                    </div>
+                </button>
+            </ng-template>
+
+            <ng-template ngbPanelContent class="p-body">
+                <h4 class="fs-12 fw-600 text-uppercase bg-blue-100" style="padding: 4px;">Customer Information</h4>
+                <app-customer-detail [customerId]="customerId" [data]="data" [readonly]="readonly" (signals)="onCustomerDetails($event)"></app-customer-detail>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Upload Documents -->
+        <ngb-panel id="ud" [disabled]="tabs[1].disabled">
+            <ng-template ngbPanelHeader let-opened="opened" class="mb-8">
+                <button ngbPanelToggle class="w-100-p btn" style="color: #e60000;">
+                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="space-between center">
+                        <div fxLayoutGap="8px" fxLayoutAlign="start center">
+                            <i class="ri-file-copy-2-line"></i>
+                            <span> Upload Documents </span>
+                        </div>
+                        <span><i [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                    </div>
+                </button>
+            </ng-template>
+
+            <ng-template ngbPanelContent class="p-body">
+                <h4 class="fs-12 fw-600 text-uppercase bg-blue-100" style="padding: 4px;">Document Details</h4>
+                <app-customer-detail [showUploadDocs]="true" [showGeneralDetails]="false" [readonly]="readonly" [customerId]="customerId" (signals)="onUploadDocument($event)"></app-customer-detail>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Packages -->
+        <ngb-panel id="pkg" [disabled]="tabs[2].disabled">
+            <ng-template ngbPanelHeader let-opened="opened" class="mb-8">
+                <button ngbPanelToggle class="w-100-p btn" style="color: #e60000;">
+                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="space-between center">
+                        <div fxLayoutGap="8px" fxLayoutAlign="start center">
+                            <i class="ri-list-settings-line"></i>
+                            <span> Packages </span>
+                        </div>
+                        <span><i [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                    </div>
+                </button>
+            </ng-template>
+
+            <ng-template ngbPanelContent class="p-body">
+                <app-customer-packages [customerId]="customerId" [readonly]="readonly" (signals)="onAssignPackage($event)"></app-customer-packages>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Features -->
+        <ngb-panel id="feat" [disabled]="tabs[3].disabled">
+            <ng-template ngbPanelHeader let-opened="opened" class="mb-8">
+                <button ngbPanelToggle class="w-100-p btn" style="color: #e60000;">
+                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="space-between center">
+                        <div fxLayoutGap="8px" fxLayoutAlign="start center">
+                            <i class="ri-file-mark-line"></i>
+                            <span> Features </span>
+                        </div>
+                        <span><i [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                    </div>
+                </button>
+            </ng-template>
+
+            <ng-template ngbPanelContent class="p-body">
+                <app-features [customerId]="customerId" [readonly]="readonly" (signals)="onAssignFeature($event)"></app-features>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Admin List -->
+        <ngb-panel id="al" [disabled]="tabs[4].disabled">
+            <ng-template ngbPanelHeader let-opened="opened" class="mb-8">
+                <button ngbPanelToggle class="w-100-p btn" style="color: #e60000;">
+                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="space-between center">
+                        <div fxLayoutGap="8px" fxLayoutAlign="start center">
+                            <i class="ri-admin-line"></i>
+                            <span> Admins List </span>
+                        </div>
+                        <span><i [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                    </div>
+                </button>
+            </ng-template>
+
+            <ng-template ngbPanelContent class="p-body">
+                <app-customer-packages [showAdminList]="true" [readonly]="readonly" [showPackages]="false" [customerId]="customerId" (signals)="onAdminListSignals($event)"></app-customer-packages>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Hardware -->
+        <ngb-panel id="hw" [disabled]="tabs[5].disabled">
+            <ng-template ngbPanelHeader let-opened="opened" class="mb-8">
+                <button ngbPanelToggle class="w-100-p btn" style="color: #e60000;">
+                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="space-between center">
+                        <div fxLayoutGap="8px" fxLayoutAlign="start center">
+                            <i class="ri-file-settings-line"></i>
+                            <span> Hardware </span>
+                        </div>
+                        <span><i [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                    </div>
+                </button>
+            </ng-template>
+
+            <ng-template ngbPanelContent class="p-body">
+                <app-customer-hardware [customerId]="customerId" [readonly]="readonly" (signals)="onHardwareSignals($event)"></app-customer-hardware>
+            </ng-template>
+        </ngb-panel>
+
+        <!-- Hardware Installation -->
+        <ngb-panel id="hi" [disabled]="tabs[6].disabled">
+            <ng-template ngbPanelHeader let-opened="opened" class="mb-8">
+                <button ngbPanelToggle class="w-100-p btn" style="color: #e60000;">
+                    <div class="w-100-p" fxLayout="row" fxLayoutAlign="space-between center">
+                        <div fxLayoutGap="8px" fxLayoutAlign="start center">
+                            <i class="ri-file-settings-line"></i>
+                            <span> Hardware Shipment & Installation </span>
+                        </div>
+                        <span><i [ngClass]="opened ? 'ri-subtract-line' : 'ri-add-line'"></i></span>
+                    </div>
+                </button>
+            </ng-template>
+
+            <ng-template ngbPanelContent class="p-body">
+                <app-hardware-installation [customerId]="customerId" [readonly]="readonly" (signals)="onHardwareISignals($event)"></app-hardware-installation>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+</div>

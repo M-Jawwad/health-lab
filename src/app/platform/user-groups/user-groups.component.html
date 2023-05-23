@@ -1,0 +1,91 @@
+<div class="card w-100-p h-100-p" style="border: none; height: 100%;">
+    <h3 class="fs-14 fw-600 p-16 pt-10 pb-10 mb-0" style="border-bottom: 1px solid #ececec;">Groups
+        <i class="ri-information-line info grey-400" ngbTooltip="Groups, Description, Status, Action"
+            triggers="mouseenter:mouseleave" container="body" placement="top"></i>
+    </h3>
+
+    <img *ngIf="loading" src="/assets/images/block-loader.gif" class="loader" alt="Loading" srcset="" width="150px"
+        height="150px">
+
+    <div class="p-16 w-100-p" fxLayout="row wrap" style="height: calc(100% - 40px);">
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between start" class="h-48 mb-10">
+            <div fxFlex="60">
+                <app-search fxFlex="50" [cols]="cols" (signal)="onSearch($event)" [showFilters]="showFilters">
+                </app-search>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="end start" fxFlex="40">
+                <div class="w-210">
+                    <button *ngIf="!readonly" fxFlex class="btn btn-success btn-round fs-14 fw-300"
+                        (click)="onAddGroup()" style="border-radius: 20px !important;">
+                        <i class="ri-add-circle-fill"></i>
+                        Add Group
+                    </button>
+                </div>
+                <div class="col-md-4 pr-0 pl-8">
+                    <button fxFlex class="btn btn-success btn-round fs-14 fw-300"
+                        style="border-radius: 20px !important;" (click)="onDownload()">
+                        <i class="ri-download-fill"></i>
+                        Download
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-100-p" style="height: calc(100% - 58px);">
+            <div style="display: flex; flex-direction: row; height: auto; max-height: calc(100% - 46px);">
+                <div style="overflow: auto; flex: 1;">
+                    <div fxFlex>
+                        <table class="table" style="width: calc(100% - 1px);">
+                            <thead style="position: sticky; top: -1px;">
+                                <tr>
+                                    <th scope="col" sortable="groups" (sort)="onSort($event)">GROUPS</th>
+                                    <th scope="col" sortable="description" (sort)="onSort($event)">DESCRIPTION</th>
+                                    <th scope="col" sortable="status" (sort)="onSort($event)">STATUS</th>
+                                    <th scope="col" *ngIf="!readonly">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="!loading && groups.length > 0">
+                                    <tr role="row" *ngFor="let group of groups; let even=even;" [class.even-row]="even">
+                                        <td><a class="text-overflow" style="cursor: pointer;"
+                                                (click)="onAddGroup(group, 'Group Details')">{{group.name}}</a></td>
+                                        <td> {{group.description}}</td>
+                                        <td> {{group.status}}</td>
+                                        <td fxLayoutGap="8px" *ngIf="!readonly">
+                                            <!-- <ng-container *ngIf="permission && permission[0] === 'RW'"> -->
+                                            <a type="button" (click)="onAddGroup(group, 'Edit Group')"
+                                                style="text-decoration: none;"
+                                                class="btn btn-icon btn-info btn-xs lh-16 h-26" ngbTooltip="Edit">
+                                                <i class="ri-pencil-fill"></i>
+                                            </a>
+                                            <!-- <a type="button" style="text-decoration: none;"
+                                                        class="btn btn-icon btn-danger btn-xs lh-16 h-26" data-toggle="modal"
+                                                        (click)="onToggleUser(group)">
+                                                        <i class="ri-settings-2-line"></i>
+                                                    </a> -->
+                                            <a type="button" style="text-decoration: none;"
+                                                class="btn btn-icon btn-danger btn-xs lh-16 h-26"
+                                                (click)="onDeleteGroup(group)" ngbTooltip="Delete">
+                                                <!-- <i class="ri-delete-bin-7-fill"></i> -->
+                                                <i class="ri-delete-bin-2-fill"></i>
+                                            </a>
+                                            <!-- </ng-container> -->
+                                        </td>
+                                    </tr>
+                                </ng-container>
+
+                                <tr *ngIf="!loading && groups.length === 0">
+                                    No record found
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <app-pagination *ngIf="groups.length > 0" [length]="count" (pageChange)="onChangePage($event)">
+            </app-pagination>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+/* You can add global styles to this file, and also import other style files */
+/* Importing Bootstrap SCSS file. */
+@import "assets/styles/bootstrap-extend";
+@import "assets/styles/helpers";
+@import "assets/styles/fonts";
+@import "assets/styles/global";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+html, body { height: 100%; }
+body {
+    margin: 0;
+    height: 100%;
+    font-family: 'Vodafone Rg', sans-serif !important;
+    font-size: 14px !important;
+    background: #f8f8f8;
+    color: #444;
+}
+
+// .btn-danger {
+//     background: #e9595b !important;
+//     border-color: #e9595b !important;
+// }
+
+.modal-sm {
+    max-width: 400px !important;
+}
+
+.modal-md-sm {
+    max-width: 500px !important;
+}
+
+.modal-md {
+    max-width: 600px !important;
+}
+
+.modal-lg {
+    max-width: 900px !important;
+}
+
+.modal-sm-lg {
+    max-width: 800px !important;
+}
+
+.modal-md-lg {
+    max-width: 750px !important;
+}
+
+.modal-md-md {
+    max-width: 676px !important;
+}
+

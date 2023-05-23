@@ -1,0 +1,14 @@
+::ng-deep .group-container .ng-select-container {
+    box-shadow: none;
+    border-radius: 0 !important;
+}
+
+::ng-deep .accordion {
+    .card-header {
+        padding: 0;
+    }
+    .card-body {
+        padding: 12px;
+        padding-bottom: 0 !important;
+    }
+}
