@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "cob-v2": {
+    "prism-health-lab": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/cob-v2",
+            "outputPath": "dist/prism-health-lab",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -77,10 +77,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "cob-v2:build:production"
+              "browserTarget": "prism-health-lab:build:production"
             },
             "development": {
-              "browserTarget": "cob-v2:build:development"
+              "browserTarget": "prism-health-lab:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -88,7 +88,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "cob-v2:build"
+            "browserTarget": "prism-health-lab:build"
           }
         },
         "test": {
@@ -112,5 +112,5 @@
       }
     }
   },
-  "defaultProject": "cob-v2"
+  "defaultProject": "prism-health-lab"
 }

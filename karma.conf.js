@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/cob-v2'),
+      dir: require('path').join(__dirname, './coverage/prism-health-lab'),
       subdir: '.',
       reporters: [
         { type: 'html' },

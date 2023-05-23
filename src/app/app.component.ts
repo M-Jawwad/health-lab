@@ -7,7 +7,7 @@ import { AlertService } from './shared/alert/alert.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'cob-v2';
+  title = 'prism-health-lab';
 
   constructor(private _alertService: AlertService)
   {}
